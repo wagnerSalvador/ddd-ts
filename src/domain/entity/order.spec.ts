@@ -30,7 +30,7 @@ describe("Order unit test", () => {
       "idOrderItem1",
       "idProductCondicionador",
       1,
-      1,
+      15,
       orderId
     );
     const order = new Order(orderId, "idCustomer", [item1, item2]);

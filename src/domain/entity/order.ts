@@ -21,7 +21,7 @@ export default class Order {
       throw new Error("Item qtd must be greater than zero");
   }
   total(): number {
-    return this._items.reduce((acc, item) => acc + item.price, 0);
+    return this._items.reduce((acc, item) => acc + item.calculatePrice(), 0);
   }
 
   get id(): string {
