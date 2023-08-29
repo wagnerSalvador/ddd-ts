@@ -88,6 +88,29 @@ describe("Order repository test", () => {
     const result = await orderRepository.find(order.id);
     expect(result).toStrictEqual(order);
   });
+  it("Should findAll a order", async () => {
+    const customerRepository = new CustomerRepository();
+    const address = new Address("Rua joão pessoa", 99, "zipcode", "bla");
+    const customer = new Customer("1", "Cliente 1", address);
+    await customerRepository.create(customer);
+
+    const productRepository = new ProductRepository();
+    const product = new Product("1", "Product 1", 100);
+    await productRepository.create(product);
+
+    const item1 = new OrderItem("Item1", product.id, 1, 10, "1");
+    const order1 = new Order("1", customer.id, [item1]);
+
+    const item2 = new OrderItem("Item2", product.id, 1, 10, "2");
+    const order2 = new Order("2", customer.id, [item2]);
+
+    const orderRepository = new OrderRepository();
+    await orderRepository.create(order1);
+    await orderRepository.create(order2);
+
+    const result = await orderRepository.findAll();
+    expect([order1, order2]).toStrictEqual(result);
+   });
   it("Should update a order", async () => {
     const customerRepository = new CustomerRepository();
     const address = new Address("Rua joão pessoa", 99, "zipcode", "bla");
