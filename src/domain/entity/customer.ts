@@ -11,6 +11,7 @@ export default class Customer {
     this._name = name;
     this._address = address;
     this.validate();
+    
   }
 
   validate() {
@@ -26,7 +27,9 @@ export default class Customer {
     this._name = name;
     this.validate();
   }
-
+  changeAddress(address: Address) {
+    this._address = address;
+  }
   activete() {
     if (!this._address) {
       throw new Error("Address is mandatory to active a customer");
