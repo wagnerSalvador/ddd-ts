@@ -1,5 +1,10 @@
+import Address from "../../entity/address";
+import Customer from "../../entity/customer";
+import CustomerChangedAddressEvent from "../customer/customer-changed-address-event";
+import CustomerCreatedEvent from "../customer/customer-created-event";
 import EnviaConsoleLog1Handler from "../customer/handler/envia-console-log-1-handler";
 import EnviaConsoleLog2Handler from "../customer/handler/envia-console-log-2-handler";
+import EnviaConsoleLogHandler from "../customer/handler/envia-console-log-handler";
 import SendEmailWhenProductIsCreateHandler from "../product/handler/send-email-when-product-is-created.handler";
 import ProductCreatedEvent from "../product/product-created-event";
 import EventDispatcher from "./event-dispatcher";
@@ -61,7 +66,7 @@ describe("Domain event's tests", () => {
     expect(spyEventHandler).toHaveBeenCalled();
   });
 
-  it("Should be notify user created", () => {
+  it("Should be notify customer created", () => {
     const eventDispatcher = new EventDispatcher();
     const handler1 = new EnviaConsoleLog1Handler();
     const handler2 = new EnviaConsoleLog2Handler();
@@ -70,6 +75,41 @@ describe("Domain event's tests", () => {
 
     eventDispatcher.register("CustomerCreatedEvent", handler1);
     eventDispatcher.register("CustomerCreatedEvent", handler2);
+
+    const address = new Address("Rua joão pessoa", 99, "zipcode", "bla");
+    const customer = new Customer("1", "Cliente 1", address);
+     
+    const customerCreated = new CustomerCreatedEvent(new Date(), {
+      id: customer.id,
+      name: customer.name,
+    });
+
+    eventDispatcher.notify(customerCreated);
+
+    expect(spyEventHandler1).toHaveBeenCalled();
+    expect(spyEventHandler2).toHaveBeenCalled();
+  });
+
+  it("Should be notify user created", () => {
+    const eventDispatcher = new EventDispatcher();
+    const handler = new EnviaConsoleLogHandler();
+    const spyEventHandler = jest.spyOn(handler, "handle");
+
+    eventDispatcher.register("CustomerChangedAddressEvent", handler);
+    
+    const address = new Address("Rua joão pessoa", 99, "zipcode", "bla");
+    const customer = new Customer("1", "Cliente 1", address);
+    
+    customer.changeAddress(new Address("Rua Caracas", 99, "zipcode", "bla"));
+    const customerCreated = new CustomerChangedAddressEvent(new Date(), {
+      id: customer.id,
+      name: customer.name,
+      address: customer.address,
+    });
+
+    eventDispatcher.notify(customerCreated);
+
+    expect(spyEventHandler).toHaveBeenCalled();
 
   });
 });

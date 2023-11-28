@@ -11,7 +11,6 @@ export default class Customer {
     this._name = name;
     this._address = address;
     this.validate();
-    
   }
 
   validate() {
